@@ -1,20 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { PaperProvider } from "react-native-paper";
+import TopBar from "./components/TopBar";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import ListCard from "./components/ListCard";
+
+// Create a client
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <QueryClientProvider client={queryClient}>
+      <PaperProvider>
+        <TopBar
+          title={"List USA States"}
+        />
+        <ListCard />
+      </PaperProvider>
+    </QueryClientProvider>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
