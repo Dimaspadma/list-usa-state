@@ -1,14 +1,24 @@
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import CustomCard from "./CustomCard";
-import { Text } from "react-native-paper";
+import { ActivityIndicator, MD2Colors, Text } from "react-native-paper";
 import { fetchStates } from "../lib/my-api";
+import { FlatList, RefreshControl } from "react-native";
+import React from "react";
+// import { ThreeDots } from "react-loader-spinner";
 
 const ListCard = () => {
+
   // Queries
-  const {data, isLoading, isError} = useQuery('todos', fetchStates);
+  const {data, isLoading, isError, refetch, remove} = useQuery('states', fetchStates);
+
+  const onRefresh = React.useCallback(() => {
+    // Invalidate and refetch
+    remove('states');
+    refetch();
+  }, []);
 
   if (isLoading) return (
-    <Text>Loading...</Text>
+    <ActivityIndicator size={"large"} animating={true} color={MD2Colors.red800} />
   )
 
   if (isError) return (
@@ -17,16 +27,20 @@ const ListCard = () => {
 
   // TODO: Change CustomCard be able to click and navigate to DetailScreen
   return (
-    <>
-     {data.map((item, i) => (
+    <FlatList
+      refreshControl={
+        <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+      }
+      data={data}
+      renderItem={({item}) => (
         <CustomCard
-          key={i}
           title={item.State}
           population={item.Population}
-          uri={item.image}
-        />
-     ))}
-    </>
+          uri={item.image} />
+      )}
+      keyExtractor={item => item["ID State"]}
+    >
+    </FlatList>
   )
 }
 
