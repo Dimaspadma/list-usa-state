@@ -6,7 +6,7 @@ import { FlatList, RefreshControl } from "react-native";
 import React from "react";
 // import { ThreeDots } from "react-loader-spinner";
 
-const ListCard = () => {
+const ListCard = ({navigation}) => {
 
   // Queries
   const {data, isLoading, isError, refetch, remove} = useQuery('states', fetchStates);
@@ -34,9 +34,8 @@ const ListCard = () => {
       data={data}
       renderItem={({item}) => (
         <CustomCard
-          title={item.State}
-          population={item.Population}
-          uri={item.image} />
+          item={item}
+          navigation={navigation}/>
       )}
       keyExtractor={item => item["ID State"]}
     >
